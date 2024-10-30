@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="./layui/css/layui.css">
+</head>
+
+<link rel="stylesheet" th:href="@{ /layui/css/layui.css}">
+<!--引入layui的js文件-->
+<script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+<div style="align-items: center ;display: flex  ;width: 80%;margin: 0 auto ;"  >
+    <div style="background: #FFF0F5 ;display: flex ;width: 100% ;height: 40px;line-height: 30px;align-items: center">
+        <div style="width:10% ">
+            <input type="checkbox" id="checkAll">全选
+        </div>
+        <div style="width:40%"> 商品</div>
+        <div  style="width:10%"> 单价</div>
+        <div  style="width:15%"> 数量</div>
+        <div  style="width:12%" > 小计</div>
+        <div  style="width:13%" > 操作</div>
+
+    </div>
+</div>
+<div style="width: 80%  ;margin: 0 auto ;" th:each="c:${count}" >
+    <div  style="display: flex;height: 160px; border-top: solid 1px lightsalmon ; width:100% " th:each="g:${c.goods}" >
+        <div style="width:10% ">
+            <input class="buyBuyBuy" th:value="${c.getGoodsId()}"  type="checkbox" th:id="${c.count}" style="margin-top: 10px;">买它
+        </div>
+        <div style=" display: flex; width:40%" >
+            <div style="align-items: center; width: 75%;flex-wrap: wrap">
+                <img th:src="${c.getGoods().getImg()}" style=" float: left;margin-top: 10px;width: 100px" height="50%" >
+                <p th:text="${c.getGoods().getTitle()}" style="margin-top: 10px;"></p>
+            </div>
+        </div>
+        <div  style="margin-top: 10px;width:10%" th:text="${c.getGoods().getPrice()}"> 单价</div>
+        <div  style="margin-top: 10px;width:15%;display: flex" >
+            <!--  class="addCount"  -->
+            <!--  之前报错的原因在于url中没有加入/{id}/{count}/而直接加入回去参数语句导致url获取失败-->
+            <a  th:href="@{/pages/front/Customers/delCounts/{id}/{count}/(id=${c.getShopCarId()},count=${c.count})}"   style="text-align: center; height: 20px; width:15px;margin-right: 0px; border: lightgray 1px solid; background: white">-</a>
+            <!--   class="count" -->
+            <input type="text" style="text-align: center; height: 20px; margin-left:0px ; border:1px solid lightgray;  width: 30%"  th:value="${c.count}" >
+            <!--  class="delCount"  -->
+            <a th:href="@{/pages/front/Customers/addCounts/{id}/{count}/(id=${c.getShopCarId()},count=${c.count})}"  style="text-align: center; height: 20px;width:15px;margin-left: 0px; border: lightgray 1px solid; background: white">+</a>
+        </div>
+        <div  style="margin-top: 10px;width:12%" th:id="little-price" th:text="${c.getGoods().getPrice()}*${c.count}"> 小计</div>
+        <div  style="margin-top: 10px;width:13% ">
+
+            <!--    /*@thymesVar id="getGoodsId" typew="com.fish.marketgoods.pojo.entity.ShopCar*/-->
+            <a th:href="@{'/pages/front/Customers/deleteGoodsByGoodsId/'+ ${c.getShopCarId()}}" >
+                删除
+            </a></div>
+    </div>
+</div>
+<div style=" margin: 0 auto;width: 10%;height: 20px" ></div>
+
+<div style="display: flex ;margin: 0 auto;border-top: solid orangered 1px;width: 80%;height: 50px" >
+
+    <div style="width:15%">
+        <input type="checkbox" id="checkAllChildren" style="margin-top: 15px;">全选
+    </div>
+    <div style="width:5%"></div>
+    <div style="width:20% ;margin-top: 13px;margin-left: 10px">
+        <a  href="/pages/front/Customers/cleanShopCar"  onclick="javascript:return cleanShopCar() ;" >
+            <span style="color: darkorange"> 清空购物车</span>
+        </a>
+
+    </div>
+
+    <div  style="display: flex; margin-left:50% ; width: 50%; line-height:50px;border: solid snow 1px ">
+        <p style="width: 30%" id="countOfAll"></p>
+        <p style="width: 10%">总价:</p>
+        <p id="sumAllPrice" style="margin-left: 5px; float: left; color: red;font-weight: 700"> </p>
+        <input  type="button" value="买买买" id="payForChecked"  style=" margin-left: 50px; font-size: larger ; font-weight: 700;
+            color: snow; border: none; width: 80px; line-height:40px;background: tomato ">
+    </div>
+
+
+    <script src="./layui/layui.js"></script>
+
+</body>
+</html>

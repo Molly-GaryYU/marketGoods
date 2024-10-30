@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>购物车</title>
+</head>
+<style>
+    .title div{
+        padding-left:10px ;
+        border-left: 1px solid lightgray;
+    }
+    .goods input{
+        border: none;
+        background: none;
+        overflow: hidden;
+        width: 100%;
+    }
+</style>
+<body>
+
+<div style=" display: flex;align-items: center;flex-wrap: wrap">
+   <div style="width: 100%;align-items: center">
+       <div style="width: 50% ;display: flex;border: solid #CC3333 2px">
+           <div style="width: 80% ">
+               <input id="searchInfo" type="text" style="width: 100% ;height: 28px ;border:none">
+           </div>
+           <div  id="search"  style=" font-weight: 700; color: white;width: 20% ;background: #CC3333;padding: 5px 25px ;text-align: center">
+               搜索
+           </div>
+       </div>
+   </div>
+   <div style="width: 100%">
+<div style="align-items: center ;display: flex  ;width: 100%;margin: 0 auto ;"  >
+    <div class="title" style="background: #FFF0F5 ;display: flex ;width: 100% ;height: 40px;line-height: 30px;align-items: center">
+        <div style="width:5% ">
+            <input type="checkbox" id="checkAll">全选
+        </div>
+        <div style=" width:8%"> 商品的Id</div>
+        <div  style="width:10%"> 商品标题</div>
+        <div  style="width:10%"> 商品图片</div>
+        <div  style="width:8%" > 商品类型Id</div>
+        <div  style="width:9%" > 原价</div>
+        <div  style="width:9%" > 现价</div>
+        <div  style="width:9%" > 是否在售</div>
+        <div  style="width:9%" > 商品库存</div>
+        <div  style="width:9%" > 商家名称</div>
+        <div  style="width:9%" > 评论数量</div>
+        <div  style="width:9%" > 操作</div>
+    </div>
+</div>
+
+</div>
+
+   <!-- 商品信息遍历-->
+    <div class="goods" id="goods" style="width: 100%"><div id="allGoods"></div></div>
+
+
+    <!--分页-->
+   <div>
+
+   </div>
+
+
+</div>
+</body>
+<script src="https://s3.pstatp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js" crossorigin="anonymous"></script>
+<!--商品遍历&&商品更新-->
+<script >
+             //商品遍历
+            $.post("/pages/back/goods/getGoods",function (data) {
+                alert(data[1]);
+             for (let i=0;i<data.length;i++){
+                let goods=data[i];
+               let goodsItem=$("     <div class='"+goods.goodsId+"' style=\"align-items: center ;display: flex  ;width: 100% ;margin: 0 auto \"  >\n" +
+                   "        <div class=\"title\" style=\"background: #FFF0F5 ;display: flex ;width: 100% ;height: 40px;line-height: 30px;align-items: center\">\n" +
+                   "            <div style=\"width:5% ;border-left: none\"  th:value=\"${t.goodsId}\"  value=\"\">\n" +
+                   "                <input type=\"checkbox\" id=\"\">\n" +
+                   "            </div>\n" +
+                   "            <div style=\" width:8%\"><input type=\"text\"  value='"+goods.goodsId+"' name=\"goodsId\" > </div>\n" +
+                   "            <div  style=\"width:10%\"> <input type=\"text\"  value='"+goods.title+"' name=\"title\" ></div>\n" +
+                   "            <div  style=\"width:10%\"> <input type=\"text\"  value='"+goods.img+"' name=\"img\" ></div>\n" +
+                   "            <div  style=\"width:8%\" > <input type=\"text\"  value='"+goods.goodTypeId+"' name=\"goodTypeId\" ></div>\n" +
+                   "            <div  style=\"display: flex;width:9%\" ><span>￥</span> <input type=\"text\"  value='"+goods.oldPrice+"' name=\"oldPrice\" ></div>\n" +
+                   "            <div  style=\"display: flex;width:9%\" ><span>￥</span>  <input type=\"text\"  value='"+goods.price+"'  name=\"price\" ></div>\n" +
+                   "            <div  style=\"width:9%\" > <input type=\"text\"  value='"+goods.onSale+"' name=\"onSale\" ></div>\n" +
+                   "            <div  style=\"width:9%\" > <input type=\"text\"  value='"+goods.count+"' name=\"count\" ></div>\n" +
+                   "            <div  style=\"width:9%\" > <input type=\"text\"  value='"+goods.merchantName+"' name=\"merchantName\" ></div>\n" +
+                   "            <div  style=\"width:9%\" > <input type=\"text\"  value='"+goods.evaluationCount+"' name=\"evaluationCount\" ></div>\n" +
+                   "            <div  style=\"width:9%;display: flex \" >\n" +
+                   "                <a class=\"update\" style=\"text-align: center;width: 40%;display: block;border-radius: 2em ;cursor: pointer ;background: lightgreen\"  value='"+goods.goodsId+"' >更新</a>\n" +
+                   "           <!-- <div th:value=\"${t.goodsId}\">更新</div>-->\n" +
+                   "            <a style=\"text-align: center;width: 40%;display: block;border-radius: 2em ;cursor: pointer ;background: orangered; margin-left: 5px\"  value=\"\"  >删除</a>\n" +
+                   "            </div>\n" +
+                   "        </div>\n" +
+                   "    </div>");
+
+               let allGoods=$("#allGoods");
+                 allGoods.append(goodsItem);
+             }
+             //更新商品信息
+                var updates =document.getElementsByClassName('update');
+                for (var k=0 ;k<updates.length;k++){
+
+                    updates[k].setAttribute("index",k);
+                    updates[k].onclick =function() {
+                        var index= this.getAttribute("index");
+                        var id=this.getAttribute("value")
+                      /*  const id=updates[k].attributes['value'].nodeValue;*/
+                     /*   const id=updates[k].getAttribute('value');*/
+                        console.log(id);
+                        var inputRow=document.getElementsByClassName(id);
+                        var inputsValue=  inputRow[0].getElementsByTagName("input")
+                        let goodsId =parseInt(inputsValue[1].value);
+                        let title =inputsValue[2].value
+                        let img =inputsValue[3].value
+                        let goodTypeId = parseInt(inputsValue[4].value);
+                        let oldPrice = inputsValue[5].value
+                        let price =inputsValue[6].value
+                        let onSale =inputsValue[7].value
+                        let count =inputsValue[8].value
+                        let merchantName =inputsValue[9].value
+                        let evaluationCount =inputsValue[10].value
+                        goods={
+                            goodsId,
+                            title,
+                            img,
+                            goodTypeId,
+                            oldPrice,
+                            price,
+                            onSale,
+                            count,
+                            merchantName,
+                            evaluationCount
+                        }
+                        console.log(goods)
+                        $.ajax({
+                            url: "/pages/back/goods/updateGoodsInfo",//如果不可以可以加入http
+                            method: "post",
+                            data: goods,
+                            success: function (date) {
+                                alert(date);
+                            }
+                        });
+                    }
+                }
+
+            });
+</script>
+
+<script>
+
+
+    var search=document.getElementById("search" );
+    search.onclick=function () {
+
+        var searchInfo1=document.getElementById("searchInfo");
+        var searchInfo=searchInfo1.value;
+        alert(searchInfo);
+
+        $.ajax({
+            url: "/pages/back/goods/searchGoods/"+searchInfo,
+            method: "post",
+            success: function (date) {
+                let a= $('.goods');
+                a.empty(); //empty()是class类的方法 id不能使用
+                a.append("<div id=\"allGoods\"   ></div>")
+                alert(date);
+                for (let q=0;q<=date.length;q++){
+                    let g=date[q];
+                    console.log(g);
+                    let goodsItem=$("     <div class='"+g.goodsId+"' style=\"align-items: center ;display: flex  ;width: 100% ;margin: 0 auto \"  >\n" +
+                        "        <div class=\"title\" style=\"background: #FFF0F5 ;display: flex ;width: 100% ;height: 40px;line-height: 30px;align-items: center\">\n" +
+                        "            <div style=\"width:5% ;border-left: none\"  th:value=\"${t.goodsId}\"  value=\"\">\n" +
+                        "                <input type=\"checkbox\" id=\"\">\n" +
+                        "            </div>\n" +
+                        "            <div style=\" width:8%\"><input type=\"text\"  value='"+g.goodsId+"' name=\"goodsId\" > </div>\n" +
+                        "            <div  style=\"width:10%\"> <input type=\"text\"  value='"+g.title+"' name=\"title\" ></div>\n" +
+                        "            <div  style=\"width:10%\"> <input type=\"text\"  value='"+g.img+"' name=\"img\" ></div>\n" +
+                        "            <div  style=\"width:8%\" > <input type=\"text\"  value='"+g.goodTypeId+"' name=\"goodTypeId\" ></div>\n" +
+                        "            <div  style=\"display: flex;width:9%\" ><span>￥</span> <input type=\"text\"  value='"+g.oldPrice+"' name=\"oldPrice\" ></div>\n" +
+                        "            <div  style=\"display: flex;width:9%\" ><span>￥</span>  <input type=\"text\"  value='"+g.price+"'  name=\"price\" ></div>\n" +
+                        "            <div  style=\"width:9%\" > <input type=\"text\"  value='"+g.onSale+"' name=\"onSale\" ></div>\n" +
+                        "            <div  style=\"width:9%\" > <input type=\"text\"  value='"+g.count+"' name=\"count\" ></div>\n" +
+                        "            <div  style=\"width:9%\" > <input type=\"text\"  value='"+g.merchantName+"' name=\"merchantName\" ></div>\n" +
+                        "            <div  style=\"width:9%\" > <input type=\"text\"  value='"+g.evaluationCount+"' name=\"evaluationCount\" ></div>\n" +
+                        "            <div  style=\"width:9%;display: flex \" >\n" +
+                        "                <a class=\"update\" style=\"text-align: center;width: 40%;display: block;border-radius: 2em ;cursor: pointer ;background: lightgreen\"  value='"+g.goodsId+"' >更新</a>\n" +
+                        "           <!-- <div th:value=\"${t.goodsId}\">更新</div>-->\n" +
+                        "            <a style=\"text-align: center;width: 40%;display: block;border-radius: 2em ;cursor: pointer ;background: orangered; margin-left: 5px\"  value=\"\"  >删除</a>\n" +
+                        "            </div>\n" +
+                        "        </div>\n" +
+                        "    </div>");
+
+
+                    let showSelect=$("#allGoods");
+                    console.log(showSelect);
+                    showSelect.append(goodsItem);
+
+                }
+            }
+        });
+    }
+</script>
+</html>

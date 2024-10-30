@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        #goods_title:hover{
+            color: red;
+            cursor: pointer;
+        }
+        #loginbtn:hover{
+            color: red;
+            cursor: pointer;
+        }
+        #myShopCar:hover{
+            color: red;
+            cursor: pointer;
+        }
+        .img{
+            width: 1090px;
+            height: 353px;
+        }
+      /*  透明度不要用opacity 这个子元素会继承
+        用rgba这个属性*/
+        /*opacity:0.4; 实现背景的透明度约接近于1透明度越好吧~~*/
+        .point{
+            position: relative;
+         /*   opacity:0.2;
+            background: #3B3B3B;*/
+            display: flex;
+            width: 100%;
+            bottom: 5px;
+        }
+        .point li{
+            opacity:0.2;
+            border: solid 1px #3B3B3B;
+            display: block;
+            width: 20%;
+            height: 5px;
+            margin-left: 2px;
+        }
+        .point .on{
+           background: darkred;
+            opacity:0.4;
+        }
+
+    /*   意思是如果有标签的id前面为type-的就执行这个样式*/
+        [id^=type-]:hover{
+            color: red;
+            cursor: pointer;
+        }
+        .show{
+            margin-top:20px ;
+            display: flex;
+            width: 100%;
+            background: none;
+            text-align: center;
+        }
+       /* 让line-height==height实现文本居中*/
+        .show li{
+            line-height:50px ;
+            height: 50px;
+            color: #CC3333;
+            font-size: 18px;
+            display: block;
+            width: 12.5%;
+        }
+     /*   .show li:hover{
+           background: #CC3333;
+            color: white;
+        }*/
+        .liOn{
+            background: #CC3333;
+            color: white;
+        }
+
+        .goodsShow{
+            overflow: hidden;
+            width: 100%;
+            height: 500px;
+        }
+        .goodsShow .li{
+            margin-left:10px;
+            display: block;
+            width: 19%;
+            text-align: center;
+            align-items: center;
+            height: 250px;
+            float: left;
+            flex-wrap: wrap;
+            cursor: pointer;
+        }
+        .goodsShow .div{
+            width: 65%;
+          margin: 0 auto;
+            height: 100%;
+        }
+
+
+        .goodsShow .li .div .img{
+             width: 100%;
+               margin: 0 auto;
+            height: 60%;
+        }
+        .goodsShow .li .div .p{
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 15px;
+            height: 16%;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            font-weight: 500;
+        }
+        .goodsShow .li .div .span{
+            padding-top: 10px;
+            width: 100%;
+            margin-top: 30px;
+            height: 20%;
+            color: red;
+            opacity:0.9;
+            font-size: 18px;
+            font-weight: 400;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://s3.pstatp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <link rel="stylesheet" th:href="@{ /layui/css/layui.css}">
+    <!--引入layui的js文件-->
+    <script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+</head>
+<link rel="stylesheet" th:href="@{ /layui/css/layui.css}">
+<!--引入layui的js文件-->
+<script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+<body>
+<!--topInfo-->
+<div style="display: flex;align-items: center;height: 20px ;background: floralwhite">
+    <div style="float: left;width: 20%;display: flex;color: lightgray;margin-left:10% ">
+        <div >
+            <a style=";color: lightgray" href="/"><i class="layui-icon layui-icon-home"></i>三小只首页</a>
+        </div>
+
+        <div >
+            <a style=";color: lightgray" href="#"><i class="layui-icon layui-icon-location place"></i> 广东 </a>
+        </div>
+    </div>
+    <div style="float: right;width: 50%;display: flex;margin-left: 20%" ; >
+        <ul style="list-style: none;display: flex;color: lightgray" >
+            <li><a style="font-weight: bold" href="/pages/front/loginPage">尊贵的上帝:<span th:text="${nikeName}"></span></a>
+                <a href="/pages/front/Customers/toRegister" style="color: darkorange;margin-left: 5px">免费注册</a>|</li>
+            <li><a href="#" style="margin-left: 5px;color: lightgray"> 我的订单</a>|</li>
+            <li><a href="#" style="margin-left: 5px;color: lightgray">我的三小只 </a>|</li>
+            <li><a href="#" style="margin-left: 5px;color: lightgray">三小只会员 </a>|</li>
+            <li><a href="#" style="margin-left: 5px;color: lightgray">客户服务 </a>|</li>
+            <li><a href="#" style="margin-left: 5px;color: lightgray">网站导航 </a>
+         <a href="#" style="margin-left: 2px;color: lightgray">  网站无障碍 </a>|</li>
+
+        </ul>
+
+    </div>
+</div>
+<!--top-->
+<div style="width: 80%; margin: 0 auto; display: flex;align-items: center"w>
+    <div style="width: 30%">
+        <img style="width:269px ;height: 100px;" src="http://localhost:8080\img\index\DogLogo.png"/>
+    </div>
+   <!-- 搜索框-->
+    <div style="width: 50% ;display: flex;border: solid #CC3333 2px">
+        <div style="width: 80% ">
+            <input type="text" style="width: 100% ;height: 28px ;border:none">
+        </div>
+        <div   style=" font-weight: 700; color: white;width: 20% ;background: #CC3333;padding: 2px 25px ;text-align: center">
+            搜索
+        </div>
+    </div>
+
+    <div  id=" myShopCar" style="margin-left:5%;  align-items: center; display: flex ; cursor: pointer;width: 15%;background: floralwhite ;color: red;padding: 6px;text-align: center ;">
+         <a  style="display: flex; width: 60%; margin: 0 auto; font-weight: 700" href="/pages/front/Customers/ShopCar" >
+           我的购物车<i style="margin-left:15%;  width: 20%; display: flex; font-weight: 700" class="layui-icon layui-icon-cart">
+              <span  th:text="${goodsCount}" style=" display: block; height:20px; width:20px; background:lightsalmon;  border-radius: 4em">0</span></i>
+         </a>
+    </div>
+
+    <!--    登录按钮-->
+   <!-- <div  id="loginbtn" style="cursor: pointer;width: 50px; border:2px ;background: rgb(245,245,245) ;padding: 6px;text-align: center ;margin-left: 20px;">
+     <a href="/pages/front/loginPage" style="block-size: 2px">
+         <i class="layui-icon layui-icon-user">登录</i>
+     </a>
+    </div>-->
+</div>
+<!--推荐列-->
+<div style=" width: 80%; margin: 0 auto; display: flex;">
+    <div style="height:50px; width: 20%; background: #CC3333 ;font-weight: 700;color: white;text-align: center;flex-direction: column;">
+        <p style="text-align: center ;margin-top: 15px;"> 商品种类</p>
+    </div>
+    <div style="width: 50%">
+        <ul style="list-style: none;display: flex;margin-top: 15px;">
+            <li style=" margin-left: 20px"><a style="color: black">智能生活</a>  </li>
+            <li style=" margin-left: 10px"><p style="color: black">|</p>  </li>
+            <li style="margin-left: 10px"><a style="color: black">以旧换新</a>  </li>
+            <li style=" margin-left: 10px"><p style="color: black">|</p>  </li>
+            <li style="margin-left: 10px"><a style="color: black">企业团购</a>  </li>
+            <li style="margin-left: 10px"><p style="color: black">|</p>  </li>
+            <li style="margin-left: 10px"><a style="color: black">爆款推荐</a></li>
+        </ul>
+
+    </div>
+</div>
+<!--商品种类和商品的遍历-->
+<div style="width: 80%;margin: 0 auto; display: flex">
+    <div style="height: 5%"></div>
+ <!--   商品种类-->
+    <div style="width: 20%;">
+        <div style="height: 60px; display: flex ;align-items: center ;padding: 8px;flex-wrap: wrap;border-bottom: lightgray 1px solid" th:each="t:${types} " >
+            <div style="color:#3B3B3B ;font-size: 16px ;display: flex;width: 100%">
+                <i :class="${t.getIconClass()}" ></i><a><p style="color:#3B3B3B ;margin-left: 3px"  th:text="${t.getTypeName}"></p> </a>
+            </div>
+            <!--flex-wrap: wrap 作用是自动换行-->
+            <div style="float: left; display: flex;margin-left: 0px" >
+                <div th:id="'type-'+ ${ct.getParentType()}" style="font-size: 5px; margin: 5px" th:each="ct:${t.getChildrenType}" th:text="${ct.getTypeName} ">|
+                </div>
+
+            </div>
+        </div>
+    </div>
+<!--    轮播-->
+    <div style=" width: 79%;overflow: hidden; " class="allOfShow">
+        <ul class="BigShow"  style="position: relative;display: flex;  list-style: none ;height: 350px;" > <!--overflow: hidden;-->
+            <li ><img  class="img" src="http://localhost:8080\img\index\bigShow.jpg"></li>
+            <li ><img  class="img" src="http://localhost:8080\img\index\two.webp"></li>
+            <li ><img  class="img" src="http://localhost:8080\img\index\bigShowThree.webp"></li>
+            <li ><img  class="img" src="http://localhost:8080\img\index\bbb.jpg"></li>
+            <li ><img  class="img" src="http://localhost:8080\img\index\Four.webp"></li>
+        </ul>
+        <ul class="point">
+            <li ></li>
+            <li ></li>
+            <li ></li>
+            <li ></li>
+            <li ></li>
+        </ul>
+        <div style="width: 100% ;height: 35.5%;position: relative;bottom: 5px">
+            <img style="width:100% ;height: 100% " src="http://localhost:8080\img\index\downShow.png">
+        </div>
+
+    </div>
+   <!-- 商品遍历-->
+  <!--  <div style="width: 80%; border:solid red;display: flex;padding: 20px 10px;flex-wrap: wrap" id="goodsDic" >
+        <div style="align-items: center;padding: 10px; border: solid lightblue 1px;box-shadow: 0 0 5px lightgray ;width:30% ;" th:each="t:${goods}">
+            <div><img th:src="${t.img}" style="width: 100%;height: 320px"></div>
+            <div style="color: orangered">￥<span style="font-size: 20px">1899</span></div>
+            <div id="goods_title"> 华为智选 优畅享20 Plus 5G 40W超级快充 90Hz高刷真全屏 8GB+128GB翡冷翠全网通5G手机</div>
+            <div style="color:deepskyblue;font-weight: bold;font-size: 16px;padding: 5px">99万+<span style="color: gray">条评论</span></div>
+            <div style="color: gray;font-size: 12px">三小只舔狗超市</div>
+        </div>
+
+    </div>-->
+</div>
+<!--爆款行-->
+<div style=" margin: 0 auto ;width: 300px; height: 100px" >
+    <div style="margin-top: 20px; text-align: center; float: top"><span style="font-weight: 500;font-size: 25px">热销爆款</span> </div>
+    <div style=" text-align: center; float: bottom"><span style="font-size: 15px ;color: gray">每周精选~爆款家电</span> </div>
+</div>
+
+<!--商品展示-->
+<div >
+    <div  style="margin:0 auto; background: none;width: 80%" >
+        <ul class="show" style="" >
+            <li  id="17" >空调</li>
+            <li id="44">厨卫大电</li>
+            <li id="23">平板电脑</li>
+            <li id="49">冰箱</li>
+            <li id="21">手机</li>
+            <li id="33">智能家电</li>
+            <li id="47">野生电器</li>
+            <li id="50">新品爆赞</li>
+        </ul>
+
+        <div id="goodsShow1" style="height:500px;">
+            <div class=" goodsShow ">
+                <div  class="ul" style="height: 300px">
+                    <a th:href="@{/pages/front/Customers/goodsDetail/{id}/(id=${t.goodsId})}"  th:each="t:${goods}" >
+                    <div class="li">
+                        <div class="div">
+                            <img class="img" th:src="${t.img}">
+                            <p class="p" th:text="${t.title}"></p>
+                            <span class="span" th:text="'$'+ ${t.price}"></span>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+            </div>
+         <!--       <ul id=" goodsShowUl " style="height: 300px" >
+                    <li th:each="t:${goods}">
+                        <div >
+                        <img th:src="${t.img}">
+                            <p th:text="${t.title}"></p>
+                            <span th:text="'$'+ ${t.price}"></span>
+                        </div>
+                    </li>
+                </ul>-->
+        </div>
+    </div>
+</div>
+
+<!--爆款保底-->
+<div style=" margin: 0 auto ;width: 300px; height: 100px" >
+    <div style="margin-top: 20px; text-align: center; float: top"><span style="font-weight: 500;font-size: 25px">大牌保底</span> </div>
+    <div style=" text-align: center; float: bottom"><span style="font-size: 15px ;color: gray">大牌在手~衣食无忧</span> </div>
+</div>
+<div style="width: 80%;margin: 0 auto;display: flex">
+    <div style="width: 20%"><img style="width: 100%;height: 300px" src="https://img12.360buyimg.com/babel/jfs/t1/101335/10/20945/22164/626678abE62903b77/07d797d92bc6768a.png.webp"></div>
+    <div style="width: 20%"><img style="width: 100%;height: 300px" src="https://img10.360buyimg.com/babel/jfs/t1/9665/8/16877/31084/628354bfE3c6c19f4/a30c8df2524fcdba.png.webp"></div>
+    <div style="width: 20%"><img style="width: 100%;height: 300px" src="https://img11.360buyimg.com/babel/jfs/t1/149601/14/27146/27245/6284b032E60492746/fcacefc9a64f0eef.jpg.webp"></div>
+    <div style="width: 20%"><img style="width: 100%;height: 300px" src="https://img13.360buyimg.com/babel/jfs/t1/61249/37/17681/31488/627fdc74Ed0539651/1cd8ede5c25cb86f.png.webp"></div>
+    <div style="width: 20%"><img style="width: 100%;height: 300px" src="https://img14.360buyimg.com/babel/jfs/t1/48344/29/17268/22860/6268e0e8E538df9c3/54215a50cef79b4c.jpg.webp"></div>
+</div>
+
+
+</body>
+<script src="./layui/layui.js"></script>
+
+<!--
+出现过的错误
+1.无法触发&lt;!&ndash; $("[id^=type-]").click(function ()&ndash;&gt;的方法原因和之前一样
+因为没有正确导入jQuery的js加入下面代码解决
+<script src="https://s3.pstatp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js" crossorigin="anonymous"></script>
+-->
+
+<script src="https://s3.pstatp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js" crossorigin="anonymous"></script>
+
+<!--//点击种类更改商品-->
+<script type="text/javascript" th:inline="javascript"   >
+    $(function () {
+        /* type="text/javascript" th:inline="javascript" 是th中的内联语句作用是使javascript中可以使用model传回的数据*/
+        layui.use(['table', 'layer', 'form'], function() {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            $("[id^=type-]").click(function () {
+                //获取-隔开后的第一位的值
+                let typeId=this.id.split('-')[1];
+                console.log(typeId);
+                //res指的回传的对象
+                //这里尝试使用路径传参方法
+                $.post("/pages/back/goods/getGoodsByTypeId/" + typeId,function () {
+                    //为了提高性能让goodsDic代替$('#goodsDic')这样系统就只用进行一次查询而不是多次
+                    let goodsDic=$('#goodsDic');
+                    let goods=[[${goods}]];//后台传回前端的数据类型
+                    console.log(goods)
+                    console.log(goods);
+                    goodsDic.empty();//清空goodsDic中的所有商品
+                    for (let i=0;i<=goods.length;i++){
+                        let g=goods[i];
+                        let goodsItem = $(" <div style=\"align-items: center;padding: 10px; border: solid lightblue 1px;box-shadow: 0 0 5px lightgray ;width:30% ;\" >\n" +
+                            "            <div><img src='"+goods[i].img+ "' style=\"width: 100%;height: 320px\"></div>\n" +
+                            "            <div style=\"color: orangered\">￥<span style=\"font-size: 20px\">"+goods[i].price+"</span></div>\n" +
+                            "            <div id=\"goods_title\">"+goods[i].title+ "</div>\n" +
+                            "            <div style=\"color:deepskyblue;font-weight: bold;font-size: 16px;padding: 5px\">"+goods[i].evaluationCount+"万+<span style=\"color: gray\">条评论</span></div>\n" +
+                            "            <div style=\"color: gray;font-size: 12px\">"+goods[i].merchantName+"</div>\n" +
+                            "        </div>");
+                        goodsDic.append(goodsItem);
+                        goodsItem.click(function () {
+                        alert(g.goodsId);
+                        window.location="/pages/back/goods/goodsDetail/"+g.goodsId;
+                        });
+                    }
+                });
+         /*       $.ajax({
+                    url: "/pages/back/goods/getGoodsByTypeId/" + typeId,//如果不可以可以加入http
+                    method: "POST",
+                    success: function (data) {
+                        console.log(data);
+
+                    }
+                });*/
+                alert(this.id);
+            });
+        });
+    })
+</script >
+<!--//轮播-->
+ <script>
+    $(function () {
+        var i = 0; //当前显示的图片索引li
+        var time = null; //定时炸弹
+        var delay = 2000; //延迟爆炸
+        var speed = 400; //巴卡子（艺术）的时间
+        var width = 1090;
+
+        var firstImg = $('.BigShow li').first().clone(); //克隆的意义在于它不会去改变dom的原来属性，这样dom可以保留改变前原有属性
+        $('.BigShow').append(firstImg).width( $('.BigShow li'.length*width)) //作用是设置ul长度为图片们的数量*长度
+        time = setInterval(imgChange, delay) //设置炸弹定周期性爆炸时间，实现定期自动巴卡子
+        $('.allOfShow').hover(function () {
+            clearInterval(time);      //当鼠标移入的时候拆除炸弹，让炸弹停止
+        }, function () {
+            time = setInterval(imgChange,delay);
+        });
+        //鼠标悬停在下放li标签的时候实现上面一样的事情
+        /* mouseover 是js鼠标悬浮事件
+          onmouseover 是html鼠标悬浮属性 要放在前端标签中使用 不能再js部分使用*/
+        /*所以在这里虽然mouseover报错了但是可以alert如果换成mouseover就会无法监听到事件*/
+        $('.point li').mouseover(function () {
+            i = $(this).index();
+            //索取被鼠标悬停处的索引值 作用也就是看我们鼠标悬停在第几个li标签中，当我们悬停在第一个的时候alert=0，第二个的时候等于1以此类推
+            alert(i);
+            $('.BigShow').stop().animate({left: -i * width}, 200) //animate()作用是对被选中的对象定义动画效果
+            pointChange();
+        });
+        //图片轮播
+        function imgChange() {
+            ++i;
+            isCrack();
+            pointChange()
+        }
+        //无缝轮播
+        function isCrack() {
+            if (i == $('.BigShow li').length ) {  //当索引到了最后一个li的时候自动切换回第一个图片轮播
+                i = 1;
+                $('.BigShow ').css({left: 0})
+            }
+            $('.BigShow').stop().animate({left: -i * width}, speed);//作用也就是在flex的影响下图片一起横向排布我们left图片的长度就可以实现图片切换到下一个
+            }
+      //point自动切换
+        function pointChange() {
+            if (i == $('.BigShow li').length - 1) { //当索引到了最后一个li的时候自动切换回第一个图片轮播
+                $('.point li').eq(0).addClass('on').siblings().removeClass('on');
+            } else {
+                $('.point li').eq(i).addClass('on').siblings().removeClass('on');
+            }
+        }
+    });
+
+</script>
+<!--实现鼠标hover更改商品内容-->
+<script type="text/javascript" th:inline="javascript">
+    $('.show  li').mousemove(function () {
+         var id= parseInt(this.id) ;
+       /* $(this).style().color="white";*/
+         $(this).addClass('liOn').siblings().removeClass('liOn')
+        $(this).css({"color":"white"})
+        $(this).siblings().css({"color":" #CC3333"})
+      /* this.eq(0).addClass('liOn').siblings().removeClass('liOn');*/
+       /* alert(id);*/ //进入
+        var ul=$('.ul')
+        var goodsShowUl=$('#goodsShowUl')
+        /* alert(id);*/ //进入
+        ul.empty(); //删除ul
+
+        let goods=[[${goods}]];
+        for (let i=0;i<=goods.length;i++){
+            let  goodId=goods[i].goodTypeId;
+            let good= goods[i];
+            if (parseInt(goodId)==id ){
+                //进入
+                let a=$(" <a href=\"/pages/front/Customers/goodsDetail/"+good.goodsId+ "\"> " +
+                    "<div class=\"li\" id='"+good.goodsId+"'>\n" +
+                    "                        <div class=\"div\">\n" +
+                    "                            <img class=\"img\" src='"+good.img+ "'>\n" +
+                    "                            <p class=\"p\">"+good.title+ " </p>\n" +
+                    "                            <span class=\"span\">$"+good.price.toFixed(2)+ "</span>\n" +
+                    "                        </div>\n" +
+                    "                </div>")
+                $('.ul').append(a)
+            }
+        }
+    });
+</script>
+<script type="text/javascript" th:inline="javascript">
+    var a=$('#ul').document.getElementsByTagName("a")
+    console.log(a.length)
+    for (let i=0;i<=a.length;i++){
+        let liChlid=li[i];
+        liChlid.click(function () {
+         let id=this.id;
+         console.log(id);
+        });
+    }
+</script>
+</html>

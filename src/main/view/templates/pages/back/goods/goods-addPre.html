@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>三小只宠物</title>
+    <!--    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+        <script th:src="@{style.js}"></script>-->
+    <script src="https://s3.pstatp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="./layui/css/layui.css">
+</head>
+<link rel="stylesheet" th:href="@{ /layui/css/layui.css}">
+<!--引入layui的js文件-->
+<script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+
+
+<body class="layui-card-body layui-card">
+<div style="display: flex; position: relative">
+
+    <form class="layui-form" action="/pages/back/goods/add" enctype="multipart/form-data" method="POST">
+        <div class="layui-form-item" >
+            <label class="layui-form-label">商品类型</label>
+            <div class="layui-input-block" style="width: 200px">
+                <select id="parentTypes"  lay-filter="parentTypes" >  <!---->
+                    <option  th:each="t:${types}"  th:value="${t.getGoodsTypeId()}" th:text="${t.getTypeName()}"></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item" >
+            <label class="layui-form-label">子类类型</label>
+            <div class="layui-input-block" style="width: 200px" >
+                <select id="goodTypeId" name="goodTypeId"  lay-filter="goodTypeId">  <!---->
+
+
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div>
+                <label class="layui-form-label">商品标题</label>
+                <div class="layui-input-inline" style="width: 200px">
+                    <input type="text" name="title"   class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div>
+                <label class="layui-form-label">商品原价</label>
+                <div class="layui-input-inline" style="width: 200px">
+                    <input type="text" name="oldPrice"   class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div>
+                <label class="layui-form-label">商品现价</label>
+                <div class="layui-input-inline" style="width: 200px">
+                    <input type="text" name="price"   class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否在售</label>
+            <div class="layui-input-block">
+                <input type="checkbox" checked="" name="onSale" lay-skin="switch" lay-filter="switchTest"
+                       lay-text="在售|已下架">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div>
+                <label class="layui-form-label">商品库存</label>
+                <div class="layui-input-inline" style="width: 200px">
+                    <input type="text" name="count"   class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div>
+                <label class="layui-form-label">商户名称</label>
+                <div class="layui-input-inline" style="width: 200px">
+                    <input type="text" name="merchantName"   class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div>
+                <label class="layui-form-label">评价次数</label>
+                <div class="layui-input-inline" style="width: 200px">
+                    <input type="text" name="evaluationCount"   class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div>
+                <label class="layui-form-label">商品图片</label>
+                <div class="layui-input-inline" style="width: 200px">
+                    <!-- ;border: solid lightgray 1px-->
+                    <input type="file" accept="*/*" name="pic" id="pic" onchange="UploadImg(this)">
+
+                    <img  src=""  id="previewImg"
+                          style="border-radius:5px;width:100px ;height: 100px ">
+
+                    <!--   style="display: none"-->
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1"
+                        onclick="reg()">  添加商品</button>
+            </div>
+        </div>
+
+
+        <!--style="flex-grow: 1" 让它占满全屏这样居中才能成功-->
+        <div style="flex-grow: 1 ;position: absolute;top: 0px ;right: 50px ;height: 500px;width: 900px ">
+            <h3 style="text-align: center">商品详情</h3>
+            <div class="layui-form-item layui-form-text">
+                <div class="layui-input-block">
+                  <!--  <textarea   lay-verify="content" name = "detail" id="detail"></textarea>-->
+                   <textarea style="width: 100%"; placeholder="请输入内容" class="layui-textarea" name="detail" id="detail"></textarea>
+                </div>
+            </div>
+        </div>
+
+
+
+    </form>
+
+</div>
+</div>
+</body>
+<!--   type="text/javascript" th:inline="javascript"   -->
+<!--//方法一通过layui内部select方法监听selecet的改变
+//存在的报错:1.当script标签在html标签外使用的时候会th会爆红所以要在html标签内使用
+//获取上级类型变换 从而更改下级类型为对应的上级类型的子类型 (Success function)
+//出现过的报错问题
+//1.Uncaught ReferenceError: $ is not defined这个报错的原因是因为JQuery引用失败所以无法使用JQuery把路径修改为-->
+<!--<script src="https://s3.pstatp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js" crossorigin="anonymous"></script>-->
+<!--//错误路径-->
+<!--<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>-->
+<!--//2.虽然代码没问题但是就是无法显示出子类列表
+// 愿意是因为没有加入重新渲染语句无法更新已经加载的内容
+//解决办法是加入重新渲染语句 form.render();
+//3.删除子列表不干净-->
+<!--//原因是因为for循环中i<~~ 忘记加入=号导致少执行了一次循环-->
+
+
+<script type="text/javascript" th:inline="javascript"  >
+    //列表更新功能
+    $(function () {
+        /* type="text/javascript" th:inline="javascript" 是th中的内联语句作用是使javascript中可以使用model传回的数据*/
+        layui.use(['table', 'layer', 'form'], function() {
+            var table = layui.table;
+            var layer = layui.layer
+            var form = layui.form
+            //parentTypes指向的不是select中di和name而是layui中的lay-filter的值
+            form.on('select(parentTypes)', function(data){
+                alert('listen change ');
+                let parentid=data.value;//获取父类List<GoodsTypeVo>类型的数据
+                let types=[[${types}]];//后台传回前端的数据类型
+                let childTypes;
+                for(let i=0;i<types.length;i++){
+                    if(parentid==types[i].goodsTypeId) {
+                        childTypes=types[i].childrenType;
+                    }
+                }
+                //清空子列表
+                var a = $('#goodTypeId');
+                var b = $(a)[0].options;
+                console.log(b)
+                for (let i = 0; i <= b.length; i++) {
+                    b.remove(i);
+                }
+                //更改子类型
+                if (childTypes!=null){
+                    for(let i=0;i<childTypes.length;i++){
+                        let  type=childTypes[i];
+                        console.log(type.typeName);
+                        let option = $(" <option value='"+type.parentType+"'>"+type.typeName+"</option>");
+                        $("#goodTypeId").append(option);
+                    }
+                }
+                form.render();//需要在这里加入这个代码才能让子列表显示 作用是重新渲染
+            });
+            window.onload= function (){
+                var a = $('#goodTypeId');
+                var b = $(a)[0].options;
+                b.click();
+                console.log(b)
+
+                form.render();
+            }
+
+
+        });
+
+
+    })
+
+
+</script >
+<!--//获取上级类型变换 从而更改下级类型为对应的上级类型的子类型-->
+<script type="text/javascript"  th:inline="javascript">
+    //defeated 4
+    /* function change() {
+         alert('access change() Function')
+     }*/
+    //defeated 3
+    //定义为二维数组
+  /*  $('#parentTypes').onchange=function () {
+        alert('access onchange');
+    }
+    var parentTypes=document.getElementById('parentTypes');
+    var childtype=document.getElementById('goodTypeId');
+    parentTypes.onchange=function () {
+        alert('access onchange')
+    }
+    var types="[[${types}]]";
+    console.log(types);
+    for(var i ; i<=types.length; i++){
+        console.log(types.length);
+        for (var k;k<=types[i].getChildrenType().length;k++){
+            var child =new Array(types[0].getChildrenType().length);
+            child=types[0].getChildrenType();
+            console.log(child)
+        }
+
+    }*/
+    //defeated 2
+    // $(document).read(function ()是jqury中的语句作用是在dom结构加载完之后再执行jqury操作
+    /*
+            $(document).read(function () {
+                $("parentTypes").change(function(){
+                    alert('access success');
+                });
+            });*/
+</script>
+
+</html>
+
+<script src="./layui/layui.js"></script>
+
+<!--//检视返回的图片-->
+<script type="text/javascript">
+    function UploadImg(obj) {
+        var file = obj.files[0];
+        //在控制台返回获取到的图片的信息
+        console.log("obj:" + obj);
+        console.log("file:" + file);
+        console.log("fileName:" + file.name)
+        console.log("file.size = " + file.size);
+        //创建一个读文件的对象FileReader
+        var reader = new FileReader();
+        //读取成功事件
+        reader.onload = function (e) {
+            console.log(e);
+            console.log("读取成功")
+            var img = document.getElementById("previewImg");
+            img.src = e.target.result;
+        }
+        //选着图片后即时的显示图片
+        reader.readAsDataURL(file);
+    }
+</script>
+<!--//图片检视方法JS（未实现）-->
+<script>
+    function show(file, imgDom) {
+        //判断是否支持FileReader
+        if (window.FileReader) {
+            var reader = new FileReader();
+        } else {
+            alert("您的设备不支持图片预览功能穷B，你要升级你的设备");
+        }
+        //欠缺判断上传是否为图片的功能
+        reader.onload = function (e) {
+            //获取图片dom
+            //图片路径设置为读取的图片
+            imgDom.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+    }
+</script>
+
+
+
+<script>
+
+    /*  layui.use(['table', 'layer', 'form'], function() {
+          var table = layui.table;
+          var layer = layui.layer
+          var form = layui.form*/
+    //这个filter指向的是select标签中的 lay-filter
+
+    //JS
+      layui.use(['element', 'layer', 'util'], function() {
+            var element = layui.element
+                , layer = layui.layer
+                , util = layui.util
+                , $ = layui.$;
+
+
+            });
+
+    //方法一
+    /*   $('#previewImg').click(function () {
+           $('#pic').click();
+       });
+
+
+       $('#pic').change(function () {
+           alert("图片上传成功,图片更换更能有待进步")
+           let file=this.file[0];
+           show(file,$("#previewImg")[0]);
+       });*/
+    //方法二
+    /*      $('#pic').change(function () {
+              alert("图片上传成功,图片更换更能有待进步")
+              var file = this.file[0];
+              if(window.FileReader){
+                  var reader=new FileReader();
+                  reader.readAsDataURL(file);
+                  //监听文件读取结束事件
+                  reader.onloadend=function (e) {
+                  /!*e.target.result 就是最后的路径地址*!/
+                      $("#previewImg").attr("src",e.target.result);
+                  };
+              }
+
+          });*/
+
+    /*     function show(){
+             var preview = document.querySelector('img');
+             var file    = document.querySelector('input[type=file]').files[0];
+             var reader  = new FileReader();
+
+             reader.addEventListener("load", function () {
+                 preview.src = reader.result;
+             }, false);
+
+             if (file) {
+                 reader.readAsDataURL(file);
+             }
+         }
+         */
+
+    //头部事件
+    util.event('lay-header-event', {
+        //左侧菜单事件
+        menuLeft: function(othis){
+            layer.msg('展开左侧菜单的操作', {icon: 0});
+        }
+        ,menuRight: function(){
+            layer.open({
+                type: 1
+                ,content: '<div style="padding: 15px;">处理右侧面板的操作</div>'
+                ,area: ['260px', '100%']
+                ,offset: 'rt' //右上角
+                ,anim: 5
+                ,shadeClose: true
+            });
+        }
+    });
+
+
+</script>
+

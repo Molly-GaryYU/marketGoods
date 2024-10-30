@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script th:src="@{style.js}"></script>
+</head>
+<body>
+//图片上传一般就是这两中方式
+<!--这是一次性提交-->
+<form id="form-data" action="http://localhost:8080/regist" enctype="multipart/form-data" method="POST">
+    用户名：<input type="text" name="username" placeholder="用户名"><br>
+    密码：<input type="password" name="password" placeholder="密码"><br>
+    头像：<input type="file"  name="file" id="FileImg" >
+<!--    <img src="" alt="默认头像地址（可以自己填）" id="avarimgs" style="border-radius: 50%" width="200px" height="200px">-->
+<!--    <input type="button" value="注册" id="registerBtn" onclick="reg()">-->
+        <input type="submit" value="提交">
+</form>
+
+<!--这个可以分开提交-->
+<form id="form-data2" action="http://localhost:8080/regist" enctype="multipart/form-data" method="POST">
+    用户名：<input type="text" name="username" placeholder="用户名"><br>
+    密码：<input type="password" name="password" placeholder="密码"><br>
+   <!-- 这里使用js ajax 调用上传， 获取url   这里可以百度一下怎么实现的-->
+    头像：<input type="file"  name="file" >
+ <!--   隐藏 用于存储上传后的iamgeUrl 在提交的时候一起提交-->
+    <input name="imageUrl" hidden="hidden">
+    <!--    <img src="" alt="默认头像地址（可以自己填）" id="avarimgs" style="border-radius: 50%" width="200px" height="200px">-->
+    <!--    <input type="button" value="注册" id="registerBtn" onclick="reg()">-->
+    <input type="submit" value="提交">
+</form>
+</body>
+</html>
+
+
+<script>
+    function xmTanUploadImg(obj) {
+        var file = obj.files[0];
+        console.log("obj:" + obj);
+        console.log("file:" + file);
+        console.log("fileName:" + file.name)
+        console.log("file.size = " + file.size);
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            console.log(e)// ProgressEvent 对象，里面的target.result就是base64编码
+            console.log("成功读取....");
+            var img = document.getElementById("avarimgs");
+            img.src = e.target.result;
+            //或者 img.src = this.result;  //e.target == this
+        }
+        reader.readAsDataURL(file)
+    }
+
+
+</script>
+</html>

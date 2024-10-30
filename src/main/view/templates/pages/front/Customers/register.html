@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Title</title>
+
+    <script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <link rel="stylesheet" th:href="@{ /layui/css/layui.css}">
+</head>
+<style>
+    .background{
+        background: url('http://localhost:8080/img/index/654645.png') no-repeat;
+        width: 100%;
+        height: 1300px;
+        background-size:cover;
+        opacity:0.8;
+    }
+    .center{
+        display: flex;
+        position: relative;
+        top: calc(8%);
+        width: 80%;
+        margin: 0 auto;
+
+    }
+    .left{
+        width:30%;
+     /*   border-style: solid;
+        border-color: red;*/
+        height: 450px;
+        background-color: rgba(	215,	215,	215,0.3);
+    }
+    .right{
+        background: linen;
+
+        width:35%;
+     /*   border-style: solid;
+        border-color: red;*/
+        height: 450px;
+        line-height: 50px;
+    }
+    .phone{
+        margin-left: 30px;
+        background:none ;
+        width: 100px;
+        border: none;
+        height: 40px;
+        color: mediumpurple;
+    }
+    .password{
+        margin-left: 30px;
+        background:none ;
+        width: 100px;
+        border: none;
+        height: 40px;
+        color: mediumpurple;
+
+    }
+    .tips{
+        margin-left: 30px;
+        background:none ;
+        width: 100px;
+        border: none;
+        height: 40px;
+        color: mediumpurple;
+    }
+
+    .on{
+        opacity:1 ;
+
+
+    }
+    .off{
+        opacity:0.2 ;
+    }
+    .registerButton{
+        border-radius: 10px;
+        position: relative;
+        background-color: DeepPink;
+        margin-left: 80%;
+        margin-top: 0px;
+        border: none;
+        width: 130px;
+        height: 80px;
+        font-weight: 800;
+        color: white;
+        font-size: 20px;
+        top: 20px;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+
+<div class="background"  >
+    <div class="center">
+        <div style="width:15% "></div>
+        <div class="left">
+            <div style="margin-left: 20px ;width: 65%">
+                <span style="opacity: 0.7; font-weight: bold;font-size: 30px;color:	#6f60aa">今天  你真的尽力了吗？</span>
+            </div>
+            <div style="">  <span style="margin-left: 20px; font-weight: bold;font-size: 15px;color:#6f60aa">我们山顶见~</span></div>
+
+        </div>
+        <div class="right" >
+           <!-- tips-->
+            <div style="margin-top: 45px; height: 40px; width:100%;">
+                <span style="margin-left: 50px; color: grey ;font-size: 15px">用户注册</span>
+            </div>
+         <!--   phone-->
+            <div style="margin-top: 10px; height: 55px; width:100%;">
+                <div style="border-radius: 30px; margin-left: 30px;height: 55px; width: 80%;  border: solid 3px lightgrey;">
+                    <i style="margin-left: 30px ;size: 30px" class="layui-icon">&#xe618;</i>
+                    <input id="phone" class="phone " type="text"  value="请输入手机号">
+                </div>
+            </div>
+           <!-- password-->
+            <div style="margin-top: 30px;height: 55px; width:100%;">
+                <div style="border-radius: 30px; margin-left: 30px;height: 55px; width: 80%;  border: solid 3px lightgrey;">
+                    <i style="margin-left: 30px ;size: 30px" class="layui-icon">&#xe673;</i>
+                    <input  class="tips " type="text"  value="请输入密码">
+                    <input  id="password-enter" class="password off" type="password"  >
+                </div>
+            </div>
+           <!-- check-->
+            <div style="margin-top: 30px;height: 55px; width:100%;">
+                <div style="border-radius: 30px; margin-left: 30px;height: 55px; width: 80%;  border: solid 3px lightgrey;">
+                    <i style="margin-left: 30px ;size: 30px" class="layui-icon">&#xe672;</i>
+                    <input class="tips " type="text"  value="请再次确认密码">
+                    <input id="checkPassword" class="password off" type="password"  >
+                </div>
+            </div>
+
+            <!--  button-->
+            <div style="margin-top: 30px; ">
+                <a style=";color: mediumslateblue;font-weight: 300" href="/">返回首页
+                    <i style="position: relative; size: 30px" class="layui-icon">&#xe609;</i></a>
+                <button class="registerButton">注册</button>
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+</div>
+</body>
+</html>
+<script src="https://s3.pstatp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    //phone监听
+    let phone=$('.phone')
+    phone.each(function () {
+        $(this).click(function () {
+            $(this).removeClass('off');
+            $(this).addClass('on');
+        });
+    });
+    //tips监听
+    let tips=$('.tips')
+    let passwordEnter=$('#password-enter')
+    passwordEnter.hide();
+    tips.show();
+    tips.each(function () {
+        $(this).click(function () {
+            $(this).hide();
+            passwordEnter.show();
+            $(this).removeClass('off');
+            $(this).addClass('on');
+            passwordEnter.addClass('on')
+        });
+    });
+    //password监听
+    let password1=$('.password')
+    password1.each(function () {
+        $(this).click(function () {
+            $(this).removeClass('off');
+            $(this).addClass('on');
+        });
+    });
+
+    let registerButton=$('.registerButton')
+    registerButton.each(function () {
+        $('.registerButton').click(function () {
+            //值为空的原因找到了！！！！！！！
+            //Jquery使用的是id获取而不是name，所#+id才是正确获取对象的方式 而不是 #+name
+            var phone1 = $("#phone").val();
+            var password1 = $("#password-enter").val();
+            var password2 = $("#checkPassword").val();
+
+            if(phone1==null || phone1==""){
+                alert("账号不能为空");
+            }else {
+                if (password1 == password2){
+                    alert("注册成功");
+                }else {
+                    alert("前后两次密码不一致，请重新输入");
+                }
+            }
+
+
+              $.ajax({
+                  url: "/pages/front/Customers/register" ,//如果不可以可以加入http +报错原因register后加入/
+                  type: "post",
+                  dataType: "json",
+                  data: {'phone1': phone1,
+                         'password': password1,
+                        'checkPassword':password2
+                  },
+
+                  success: function (data) {
+                      console.log(data);
+                   alert(data);
+                  },
+                  error: function (e) {
+                      alert(e);
+                  }
+              });
+        });
+    });
+
+</script>

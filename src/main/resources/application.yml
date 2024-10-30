@@ -1,0 +1,30 @@
+server:
+  port: 8080 #当前运行的端口
+
+
+
+spring:
+  datasource: #数据源配置 你的MySQL一定要用8.0吗，额这我也不清楚
+    type: com.alibaba.druid.pool.DruidDataSource  #连接池的类型
+    username: goods_market_db
+    password: 123456
+    url: jdbc:mysql://rds.lks17.com:3306/goods_market_db?serverTimezone=UTC&characterEncoding=utf8&useUnicode=true&useSSL=false  #mysql8.0以上需要加入时区不然会连接不上
+    driver-class-name: com.mysql.jdbc.Driver #数据库的驱动程序类  #如果是mysql5.*的版本 不需要加入cj！！！！！！当时是5.0以下版本吧因为我没加cj 您好我先把配置文件位置和您说一下
+  mvc:
+    hiddenmethod:
+      filter: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+
+
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true #数据库中的下划线自动转化成驼峰  没有问题吧
+#如果信息比较多，可以定义一个配置文件
+
+custom:
+  fileUploadPrefix: http://localhost:8080
+

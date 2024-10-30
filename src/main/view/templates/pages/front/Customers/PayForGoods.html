@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Title</title>
+</head>
+<style>
+    .backGroundShow{
+  /*      background: url("https://alifei03.cfp.cn/creative/vcg/veer/1600water/veer-158207322.jpg") no-repeat;*/
+        background-image: url("https://alifei03.cfp.cn/creative/vcg/veer/1600water/veer-158207322.jpg") ;
+        width: 1000px;
+        height: 1000px;
+    }
+</style>
+<body>
+<!--topInfo-->
+<div style="display: flex;align-items: center;height: 20px ;background: floralwhite">
+    <div style="float: left;width: 20%;display: flex;color: lightgray;margin-left:10% ">
+        <div >
+            <a style=";color: lightgray" href="/"><i class="layui-icon layui-icon-home"></i>三小只首页</a>
+        </div>
+        <div >
+            <a style=";color: lightgray" href="#"><i class="layui-icon layui-icon-location place"></i> 广东 </a>
+        </div>
+    </div>
+
+    <div style="float: right;width: 50%;display: flex;margin-left: 20%" ;>
+        <ul style="list-style: none;display: flex;color: lightgray" >
+            <li style="display: none" id="userId"  th:value="${userId}"></li>
+            <li><a style="font-weight: bold" href="/pages/front/loginPage">尊贵的上帝:
+                <span th:text="${nikeName}"></span></a>
+                <a href="#" style="color: darkorange;margin-left: 5px">免费注册</a>|</li>
+            <li><a href="#" style="margin-left: 5px;color: lightgray"> 我的订单</a>|</li>
+            <li><a href="#" style="margin-left: 5px;color: lightgray">我的三小只 </a>|</li>
+            <li><a href="#" style="margin-left: 5px;color: lightgray">三小只会员 </a>|</li>
+            <li><a href="#" style="margin-left: 5px;color: lightgray">客户服务 </a>|</li>
+            <li><a href="#" style="margin-left: 5px;color: lightgray">网站导航 </a>
+                <a href="#" style="margin-left: 2px;color: lightgray">  网站无障碍 </a>|</li>
+
+        </ul>
+
+    </div>
+
+</div>
+
+
+<div class="backGroundShow">
+    <img src="https://alifei03.cfp.cn/creative/vcg/veer/1600water/veer-158207322.jpg">
+</div>
+</body>
+</html>

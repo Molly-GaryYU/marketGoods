@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>商品种类遍历，更新，查询</title>
+</head>
+<style>
+    .title div{
+        padding-left:10px ;
+        border-left: 1px solid lightgray;
+    }
+    .goods input{
+        border: none;
+        background: none;
+        overflow: hidden;
+        width: 100%;
+    }
+</style>
+<body>
+
+<div style=" display: flex;align-items: center;flex-wrap: wrap">
+    <div style="width: 100%;align-items: center">
+        <div style="width: 50% ;display: flex;border: solid #CC3333 2px">
+            <div style="width: 80% ">
+                <input id="searchInfo" type="text" style="width: 100% ;height: 28px ;border:none">
+            </div>
+            <div  id="search"  style=" font-weight: 700; color: white;width: 20% ;background: #CC3333;padding: 5px 25px ;text-align: center">
+                搜索
+            </div>
+        </div>
+    </div>
+    <div style="width: 100%">
+        <div style="align-items: center ;display: flex  ;width: 100%;margin: 0 auto ;"  >
+            <div class="title" style="background: #FFF0F5 ;display: flex ;width: 100% ;height: 40px;line-height: 30px;align-items: center">
+                <div style="width:5% ">
+                    <input type="checkbox" id="checkAll">全选
+                </div>
+                <div style=" width:8%"> 商品种类Id</div>
+                <div  style="width:10%"> 父亲商品种类</div>
+                <div  style="width:10%"> 种类名称</div>
+                <div  style="width:8%" > 种类排序</div>
+                <div  style="width:9%" > 种类图标</div>
+                <div  style="width:9%" > 操作</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 商品信息遍历-->
+    <div class="goods" id="goods" style="width: 100%"><div id="allGoods"></div></div>
+
+
+    <!--分页-->
+    <div>
+
+    </div>
+
+
+</div>
+</body>
+<script src="https://s3.pstatp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js" crossorigin="anonymous"></script >
+
+<script>
+
+   $.ajax({
+       url: "/pages/back/type/getAllGoodsType" ,//如果不可以可以加入http
+       method: "post",
+       success: function (data) {
+           alert(data[1])
+           for (let i=0;i<data.length;i++){
+               let type=data[i];
+               let typesItem=$("     <div class='"+type.goodTypeId+"' style=\"align-items: center ;display: flex  ;width: 100% ;margin: 0 auto \"  >\n" +
+                   "        <div class=\"title\" style=\"background: #FFF0F5 ;display: flex ;width: 100% ;height: 40px;line-height: 30px;align-items: center\">\n" +
+                   "            <div style=\"width:5% ;border-left: none\"  th:value=\"${t.goodsId}\"  value=\"\">\n" +
+                   "                <input type=\"checkbox\" id=\"\">\n" +
+                   "            </div>\n" +
+                   "            <div style=\" width:8%\"><input type=\"text\"  value='"+type.goodsTypeId+"' name=\"goodTypeId\" > </div>\n" +
+                   "            <div  style=\"width:10%\"> <input type=\"text\"  value='"+type.parentType+"' name=\"parentType\" ></div>\n" +
+                   "            <div  style=\"width:10%\"> <input type=\"text\"  value='"+type.typeName+"' name=\"typeName\" ></div>\n" +
+                   "            <div  style=\"width:8%\" > <input type=\"text\"  value='"+type.sort+"' name=\"sort\" ></div>\n" +
+                   "            <div  style=\"display: flex;width:9%\" ><input type=\"text\"  value='"+type.iconClass+"' name=\"iconClass\" ></div>\n" +
+                   "            <div  style=\"width:9%;display: flex \" >\n" +
+                   "                <a class=\"update\" style=\"text-align: center;width: 40%;display: block;border-radius: 2em ;cursor: pointer ;background: lightgreen\"  value='"+type.goodTypeId+"' >更新</a>\n" +
+                   "           <!-- <div th:value=\"${t.goodsId}\">更新</div>-->\n" +
+                   "            <a class=\"delete\"    style=\"text-align: center;width: 40%;display: block;border-radius: 2em ;cursor: pointer ;background: orangered; margin-left: 5px\"  value='"+type.goodTypeId+"' >删除</a>\n" +
+                   "            </div>\n" +
+                   "        </div>\n" +
+                   "    </div>");
+
+               let allGoods=$("#allGoods");
+               allGoods.append(typesItem);
+           }
+           //更新商品信息
+           var updates =document.getElementsByClassName('update');
+           for (var k=0 ;k<updates.length;k++){
+               updates[k].setAttribute("index",k);
+               updates[k].onclick =function() {
+                   var index= this.getAttribute("index");
+                   var id=this.getAttribute("value")
+                   /*  const id=updates[k].attributes['value'].nodeValue;*/
+                   /*   const id=updates[k].getAttribute('value');*/
+                   console.log(id);
+                   var inputRow=document.getElementsByClassName(id);
+                   var inputsValue=  inputRow[0].getElementsByTagName("input")
+                   let goodsTypeId =parseInt(inputsValue[1].value);
+                   let parentType =inputsValue[2].value
+                   let typeName =inputsValue[3].value
+                   let sort = parseInt(inputsValue[4].value);
+                   let iconClass = inputsValue[5].value
+                   goodsType={
+                       goodsTypeId,
+                       parentType,
+                       typeName,
+                       sort,
+                       iconClass,
+                   }
+                   console.log(goods)
+                   $.ajax({
+                       url: "/pages/back/type/updateGoodsType",//如果不可以可以加入http
+                       method: "post",
+                       data: goodsType,
+                       success: function (date) {
+                           alert(date);
+                       }
+                   });
+               }
+           }
+
+           var deleteType =document.getElementsByClassName('delete');
+           for (var k=0 ;k<deleteType.length;k++){
+               deleteType[k].setAttribute("index",k);
+               deleteType[k].onclick =function() {
+                   var index= this.getAttribute("index");
+                   var id=this.getAttribute("value")
+                   /*  const id=updates[k].attributes['value'].nodeValue;*/
+                   /*   const id=updates[k].getAttribute('value');*/
+                   console.log(id);
+                   var inputRow=document.getElementsByClassName(id);
+                   var inputsValue=  inputRow[0].getElementsByTagName("input")
+                   let goodsTypeId =parseInt(inputsValue[1].value);
+                   $.ajax({
+                       url: "/pages/back/type/deleteGoodsType/"+goodsTypeId,//如果不可以可以加入http
+                       method: "post",
+                       success: function (date) {
+                           alert(date);
+                       }
+                   });
+               }
+               }
+       }
+   });
+
+
+</script>
+
+
+<script>
+
+
+    var search=document.getElementById("search" );
+    search.onclick=function () {
+
+        var searchInfo1=document.getElementById("searchInfo");
+        var searchInfo=searchInfo1.value;
+        alert(searchInfo);
+
+        $.ajax({
+            url: "/pages/back/type/searchGoodsType/"+searchInfo,
+            method: "post",
+            success: function (date) {
+                let a= $('.goods');
+                a.empty(); //empty()是class类的方法 id不能使用
+                a.append("<div id=\"allGoods\"   ></div>")
+                for (let q=0;q<=date.length;q++){
+                    let g=date[q];
+
+                    let goodsItem=$("     <div class='"+g.goodTypeId+"' style=\"align-items: center ;display: flex  ;width: 100% ;margin: 0 auto \"  >\n" +
+                        "        <div class=\"title\" style=\"background: #FFF0F5 ;display: flex ;width: 100% ;height: 40px;line-height: 30px;align-items: center\">\n" +
+                        "            <div style=\"width:5% ;border-left: none\"  th:value=\"${t.goodsId}\"  value=\"\">\n" +
+                        "                <input type=\"checkbox\" id=\"\">\n" +
+                        "            </div>\n" +
+                        "            <div style=\" width:8%\"><input type=\"text\"  value='"+g.goodsTypeId+"' name=\"goodTypeId\" > </div>\n" +
+                        "            <div  style=\"width:10%\"> <input type=\"text\"  value='"+g.parentType+"' name=\"parentType\" ></div>\n" +
+                        "            <div  style=\"width:10%\"> <input type=\"text\"  value='"+g.typeName+"' name=\"typeName\" ></div>\n" +
+                        "            <div  style=\"width:8%\" > <input type=\"text\"  value='"+g.sort+"' name=\"sort\" ></div>\n" +
+                        "            <div  style=\"display: flex;width:9%\" ><input type=\"text\"  value='"+g.iconClass+"' name=\"iconClass\" ></div>\n" +
+                        "            <div  style=\"width:9%;display: flex \" >\n" +
+                        "                <a class=\"update\" style=\"text-align: center;width: 40%;display: block;border-radius: 2em ;cursor: pointer ;background: lightgreen\"  value='"+g.goodTypeId+"' >更新</a>\n" +
+                        "           <!-- <div th:value=\"${t.goodsId}\">更新</div>-->\n" +
+                        "            <a class=\"delete\"    style=\"text-align: center;width: 40%;display: block;border-radius: 2em ;cursor: pointer ;background: orangered; margin-left: 5px\"  value='"+g.goodTypeId+"' >删除</a>\n" +
+                        "            </div>\n" +
+                        "        </div>\n" +
+                        "    </div>");
+
+                    let showSelect=$("#allGoods");
+                    console.log(showSelect);
+                    showSelect.append(goodsItem);
+                }
+            }
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>三小只宠物</title>
+
+  <!--  <link rel="stylesheet" href="./layui/css/layui.css">-->
+</head>
+<link rel="stylesheet" th:href="@{ /layui/css/layui.css}">
+<!--引入layui的js文件-->
+<script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+
+
+<body class="layui-card-body layui-card">
+<div style="display: flex; position: relative">
+
+    <form class="layui-form" enctype="multipart/form-data">
+
+
+        <div class="layui-form-item">
+            <div>
+                <label class="layui-form-label">用户昵称</label>
+                <div class="layui-input-inline" style="width: 200px">
+                    <input type="text"  id="nickName" name="nickName"   class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div>
+                <label class="layui-form-label">真实姓名</label>
+                <div class="layui-input-inline" style="width: 200px">
+                    <input type="text"   id="realName" name="realName"   class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div>
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-inline" style="width: 200px">
+                    <input type="text" id="phone" name="phone"   class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div>
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-inline" style="width: 200px">
+                    <input type="text" id="password" name="password"   class="layui-input">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" onclick="addUser()">  添加用户</button>
+            </div>
+        </div>
+        
+    </form>
+
+</div>
+</div>
+<script src="https://s3.pstatp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js" crossorigin="anonymous"></script>
+<script  type="text/javascript">
+    function addUser() {
+        var nickName=document.getElementById('nickName').value;
+        var realName=document.getElementById('realName').value;
+        var phone=parseInt(document.getElementById('phone').value) ;
+        var password=document.getElementById('password').value;
+        var userId=null;
+
+
+        var user={
+            userId,
+            nickName,
+            realName,
+            phone,
+            password,
+        };
+
+
+    $.post("/pages/back/editUserController/addUserByManger",user,function (data) {
+       alert(data);
+    });
+
+    }
+
+       /* let addUser=document.getElementById("addUser");
+        addUser.onclick =function () {
+            let userId=document.getElementById("userId");
+            alert(userId.value);
+        };*/
+
+
+</script>
+</body>
+
